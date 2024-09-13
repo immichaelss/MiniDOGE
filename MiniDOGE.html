@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Reliable Offline Unblocker</title>
+  <title>Comprehensive Offline Unblocker</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -76,10 +76,13 @@
           }
         })
         .then(content => {
-          // Set the content of the iframe directly
-          contentFrame.contentDocument.open();
-          contentFrame.contentDocument.write(content);
-          contentFrame.contentDocument.close();
+          // Create a new document for the iframe
+          var doc = contentFrame.contentDocument || contentFrame.contentWindow.document;
+
+          // Set the content of the iframe
+          doc.open();
+          doc.write(content);
+          doc.close();
 
           // Update the status message
           statusMessage.textContent = "Website unblocked successfully!";
