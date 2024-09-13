@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reliable Offline Unblocker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    
+    #content-frame {
+      width: 100%;
+      height: 80%;
+      border: none;
+    }
+    
+    .input-group {
+      display: flex;
+      width: 80%;
+      margin-top: 20px;
+    }
+    
+    .input-group input {
+      flex-grow: 1;
+      font-size: 16px;
+      padding: 10px;
+    }
+    
+    .input-group button {
+      font-size: 16px;
+      padding: 10px 20px;
+    }
+    
+    .status-message {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <iframe id="content-frame"></iframe>
+    <div class="input-group">
+      <input type="text" id="url-input" placeholder="Enter the URL to unblock">
+      <button onclick="unblockWebsite()">Unblock</button>
+    </div>
+    <div class="status-message" id="status-message"></div>
+  </div>
+
+  <script>
+    function unblockWebsite() {
+      var urlInput = document.getElementById("url-input").value;
+      var contentFrame = document.getElementById("content-frame");
+      var statusMessage = document.getElementById("status-message");
+
+      // Create a proxy URL for the website
+      var proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(urlInput);
+
+      // Fetch the website content through the proxy
+      fetch(proxyUrl)
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error(`Failed to unblock website (${response.status})`);
+          }
+        })
+        .then(content => {
+          // Set the content of the iframe directly
+          contentFrame.contentDocument.open();
+          contentFrame.contentDocument.write(content);
+          contentFrame.contentDocument.close();
+
+          // Update the status message
+          statusMessage.textContent = "Website unblocked successfully!";
+          statusMessage.style.color = "#4CAF50";
+        })
+        .catch(error => {
+          console.error("Error unblocking website:", error);
+          statusMessage.textContent = "Failed to unblock the website. Please try again.";
+          statusMessage.style.color = "#F44336";
+        });
+    }
+  </script>
+</body>
+</html>
